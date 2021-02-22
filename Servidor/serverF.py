@@ -1,19 +1,18 @@
-import os
-from os import path
-import zmq
-import sys
 import socket
 import tqdm
+import os
 
 sockett = socket.socket()
 
-#Direccion IP OSCAR: 25.121.168.83
+#Direccion IP OSCAR: 
 #LOCAL HOST: 25.121.168.83
+#host = '25.121.168.83'
 
+host = "127.0.0.1"
 
-sockett.bind(('127.0.0.1', 5555))
-sockett.listen(5)
-print(f"Escuchando a traves de {'127.0.0.1'}:{'5555'}")
+sockett.bind((host, 5757))
+sockett.listen(1)
+print(f"Escuchando a traves de {'127.0.0.1'}:{'5757'}")
 
 #Aceptar datos enviados por el cliente
 client_socket, address = sockett.accept()
@@ -90,7 +89,7 @@ if equal_recv == "DESCARGAR":
 
 #--------------------------LISTAR-------------------------------------
 if equal_recv == "LISTAR":
-    path_server = os.listdir(path="/home/dimas/Escritorio/U.T.P/10.Semestre X/Arquitectura C-S/02.Tareas/01.Tarea 1 Servidor Carga y Descarga de Archivos")
+    path_server = os.listdir(path="/home/dimas/Escritorio/ClienteServidor/Cliente_Servidor-C1/Servidor")
     files = []
 
     for file in path_server:
