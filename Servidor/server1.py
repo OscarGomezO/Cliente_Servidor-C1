@@ -19,13 +19,14 @@ while True:
     #print("Carpeta de archivos Server: ", path_server)
 
     #accion, *m, fsize = socket.recv_multipart()
-    accion = socket.recv()
+    accion, m = socket.recv_multipart()
     print(">>> Acción del cliente: ", accion)
+    print(">>> Nombre Archivo: ", m)
     #print(">>> Nombre del Archivo: ", m[0])
     #print("Tamaño del Archivo: ", fsize)
     #fsize = int(fsize.decode('utf-8'))
     if accion == b'ENVIAR':
-        socket.send_multipart([b'Proceso de CARGAR iniciado'])
+        socket.send_multipart([b'Proceso de CARGA iniciado'])
         *m, fsize = socket.recv_multipart()
         #Bprogress = tqdm.tqdm(range(fsize), f"Recibiendo {m[0]}", unit="B", unit_scale=True, unit_divisor=1024)
         #filename = open("Archivos/" + m[0].decode('utf-8'), "rb")
@@ -37,15 +38,30 @@ while True:
         socket.send_multipart([b'>>> Archivo guardado en Server'])
     if accion == b"DESCARGAR":
         print(">>> Descarga en Proceso...")
-        filename = open("Archivos/" + m[0].decode('utf-8'))
-        print("Nombre de Archivo solicitado por el Cliente: ", filename)
+        m = str(m)
+        m = m.replace("'","")[1:]
+        #filename = socket.recv_multipart(int(m))
+        #print(">>> Nombre del Archivo: ", m)
+        #fsize = os.stat(filename).st_size
+        #print("Size:" + str(fsize))
+        #Bprogress = tqdm.tqdm(range(fsize), f"Enviando {fname}", unit="B", unit_scale=True, unit_divisor=1024)
+        #socket.send(str(fsize).encode('utf-8'))
+
+        #socket.send_string("Proceso de Descarga Iniciado..")
+        #filename =  m
+        #m = socket.recv_multipart()
+        #print("Nombre de Archivo solicitado por el Cliente: ", filename)
         #sRead = filename.read(1024)
+        #filename = m.decode('utf-8')
         bytes = ''
-        with open(filename, 'rb') as f:
-            filename = open("ArchivosCliente/" + m[0].decode('utf-8'))
-            bytes = filename.read(1024)
+        with open(m, 'rb') as f:
+            #file = open("Archivos/" + m.decode('utf-8'))
+            bytes = f.read(1024)
             #bytes = f.read(filename)
-        socket.sned_multipart([filename.encode('utp-8'), bytes])
-        print(">>> Archivo envia al Cliente...")
-    else:
-        print("Acción no conocidad".format(accion))
+        fsize = os.stat(m).st_size
+        fsize = str(fsize)
+        print("Tamaño del archivo: ", fsize)
+        socket.send_multipart([m.encode('utf-8'), bytes, fsize.encode('utf-8')])
+        print(">>> Archivo enviado al Cliente...", m)
+else:
+    print("Acción no conocidada".format(accion))
