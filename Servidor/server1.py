@@ -63,5 +63,18 @@ while True:
         print("Tamaño del archivo: ", fsize)
         socket.send_multipart([m.encode('utf-8'), bytes, fsize.encode('utf-8')])
         print(">>> Archivo enviado al Cliente...", m)
+    if accion == b"LISTAR":
+        path_server = os.listdir(path="/home/ozkar11/Desktop/Bloc/UTP 10mo Semestre/Arquitectura Cliente-Servidor/Talleres/C-S_Taller1/Servidor/Archivos")
+        files = []
+        for file in path_server:
+            files.append(file)
+        
+        files_str = str(files)
+        bytes_files = files_str.encode('utf-8')
+        socket.send(bytes_files)
+        print("Archivos listados...")
+
+        #client_socket.close()
+        #sockett.close()
 else:
     print("Acción no conocidada".format(accion))

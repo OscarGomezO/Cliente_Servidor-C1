@@ -54,6 +54,18 @@ def download(action):
 
     print(">>> Archivo Descargado con Exito...")
 
+def listar(action):
+    filename = "nada"
+    action = str(action)
+    print("Acción realizada: ", action)
+    socket.send_multipart([action.encode(),filename.encode('utf-8')])
+
+    print("\n---------------ARCHIVOS LISTADOS-------------------\n")
+    list = socket.recv(1024).decode()
+    list_str = str(list)
+    print("\n" + list[1:-1])
+    print("\n---------------------------------------------------\n")
+    
 
 def menu():
     print(""" ---------------------------------MENÚ-------------------------------)
@@ -66,6 +78,8 @@ def menu():
         upload("ENVIAR")
     elif KEY == '2':
         download("DESCARGAR")
+    elif KEY == '3':
+        listar('LISTAR')
     else:
         print("No se reconoce la canción")
 menu()
